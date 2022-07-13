@@ -3,7 +3,6 @@ import s from './ContactForm.module.css';
 import { useAddContactMutation } from '../../redux/contactsSlice';
 import { useGetContactsQuery } from '../../redux/contactsSlice';
 
-
 function ContactForm() {
 
     const [ name, setName ] = useState('');
