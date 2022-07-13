@@ -1,30 +1,39 @@
 import s from './ContactList.module.css';
-import { useSelector, useDispatch } from "react-redux/es/exports";
-import { remove } from '../../redux/actions';
+import { useSelector } from "react-redux/es/exports";
+import { useGetContactsQuery } from '../../redux/contactsSlice';
+import { useDeleteContactMutation } from '../../redux/contactsSlice';
 
 function ContactList() {
     
-    const users = useSelector(state => state.items);
+    const { data, isLoading } = useGetContactsQuery();
+    const [deleteContact] = useDeleteContactMutation();
+    
     const filteredValue = useSelector(state => state.filter);
-    const dispatch = useDispatch();
 
     const handleDeleteUser = event => {
         const deleteUserId = event.currentTarget.value;
-        dispatch(remove(deleteUserId));
+        deleteContact(deleteUserId);
     }
 
     const normalizedFilter = filteredValue.toLowerCase();
-    const visibleContacts = users.filter(user => user.name.toLowerCase().includes(normalizedFilter));
-    
+    let visibleContacts = "";
+    normalizedFilter ? visibleContacts = data.filter(user => user.name.toLowerCase().includes(normalizedFilter)) : visibleContacts = data;
+
     return (
-        <ul className={s.list}>
-            {visibleContacts.map((user) => (
-                <li key={user.id} className={s.item}>
-                    <span className={s.text}>{user.name} : {user.number}</span>
-                    <button type="button" value={user.id} onClick={handleDeleteUser} className={s.btn}>Delete</button>
-                </li>
-            ))}
-        </ul>
+        <>
+            {isLoading ?
+                ('Loading...')
+                :
+                (<ul className={s.list}>
+                    {visibleContacts.map((user) => (
+                        <li key={user.id} className={s.item}>
+                            <span className={s.text}>{user.name} : {user.phone}</span>
+                            <button type="button" value={user.id} onClick={handleDeleteUser} className={s.btn}>Delete</button>
+                        </li>
+                    ))}
+                </ul >)
+            }
+        </>
     )
 }
 
