@@ -13,6 +13,7 @@ function ContactList() {
     const handleDeleteUser = event => {
         const deleteUserId = event.currentTarget.value;
         deleteContact(deleteUserId);
+        event.currentTarget.disabled = true;
     }
 
     const normalizedFilter = filteredValue.toLowerCase();

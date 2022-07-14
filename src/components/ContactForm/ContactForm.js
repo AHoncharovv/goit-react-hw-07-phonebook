@@ -7,7 +7,7 @@ function ContactForm() {
 
     const [ name, setName ] = useState('');
     const [ phone, setPhone ] = useState('');
-    const [ addContact ] = useAddContactMutation();
+    const [ addContact, { isLoading } ] = useAddContactMutation();
     const { data } = useGetContactsQuery();
 
     const handleInputChange = e => {
@@ -65,6 +65,7 @@ function ContactForm() {
             </label>
 
             <button className={s.btn}>Add contact</button>
+            {isLoading && <p className={s.text}>We are working on adding a contact</p>}
                    
         </form>      
     );   
