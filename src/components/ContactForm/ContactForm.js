@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import s from './ContactForm.module.css';
 import { useAddContactMutation } from '../../redux/contactsSlice';
 import { useGetContactsQuery } from '../../redux/contactsSlice';
@@ -7,8 +7,12 @@ function ContactForm() {
 
     const [ name, setName ] = useState('');
     const [ phone, setPhone ] = useState('');
-    const [ addContact, { isLoading } ] = useAddContactMutation();
+    const [ addContact, { isLoading, isSuccess } ] = useAddContactMutation();
     const { data } = useGetContactsQuery();
+
+    useEffect(() => {
+        isSuccess && formReset();
+    }, [isSuccess]);
 
     const handleInputChange = e => {
         switch (e.currentTarget.name) {
@@ -24,7 +28,6 @@ function ContactForm() {
         const newUserNormalized = name.toLowerCase();
         const matchedName = data.find(user => user.name.toLowerCase() === newUserNormalized);
         matchedName ? alert(`${name} is already in contacts.`) : addContact(newUser);
-        formReset();
     }
 
     const formReset = () => {
